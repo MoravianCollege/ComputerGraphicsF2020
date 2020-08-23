@@ -1,3 +1,5 @@
+/*eslint no-redeclare: "off", no-unused-vars: "off" */
+
 /**
  * Loads the file with the give name or path. The name can be relative or absolute. This loads the
  * file asynchronously. Once the file is loaded the `ondone` function is called. If the file fails

@@ -49,8 +49,8 @@ window.addEventListener('load', function init() {
     // The vertices of the triangle
     let verts = Float32Array.of(
         -1, -1,
-         0,  1,
-         1, -1,
+        0,  1,
+        1, -1,
     );
 
     // Load the vertex data into the GPU and associate with shader
