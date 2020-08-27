@@ -71,10 +71,10 @@ window.addEventListener('load', function init() {
  * Render the scene.
  */
 function render() {
-    // TODO: Associate the position attribute with the position buffer
-
     // Clear the current rendering
     gl.clear(gl.COLOR_BUFFER_BIT);
     
+    // TODO: Associate the position attribute with the position buffer
+
     // TODO: draw the trapezoid
 }

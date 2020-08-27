@@ -73,7 +73,9 @@ function initProgram() {
 function initBuffers() {
     // TODO: The vertices of the rectangle
 
-    // TODO: Load the vertex coordinate data onto the GPU
+    // TODO: Create and bind VAO
+    
+    // TODO: Load the vertex coordinate data onto the GPU and associate with attribute
 
     // TODO: Cleanup
 }
@@ -83,10 +85,10 @@ function initBuffers() {
  * Render the scene.
  */
 function render() {
-    // TODO: Associate the position attribute with the position buffer
-
     // Clear the current rendering
     gl.clear(gl.COLOR_BUFFER_BIT);
     
     // TODO: Draw the rectangle
+
+    // TODO: Cleanup
 }
