@@ -1,9 +1,11 @@
-// This is a WebGL example that draws Sierpinski's Triangle in a solid color.
-
+// Renders Sierpinski's Triangle in Color
+'use strict';
+    
 // Global WebGL context variable
 let gl;
+
 // Number of recursive steps in generating Sierpinski's Triangle
-const NUM_STEPS = 3;
+const NUM_STEPS = 5;
 
 
 // Once the document is fully loaded run this init function.
@@ -40,9 +42,13 @@ function initProgram() {
         precision mediump float;
 
         in vec4 aPosition;
+        in vec4 aColor;
         
+        out vec4 vColor;
+
         void main() {
             gl_Position = aPosition;
+            vColor = aColor;
         }`
     );
     // Fragment Shader: simplest possible, chosen color is red for each point
@@ -50,10 +56,11 @@ function initProgram() {
         `#version 300 es
         precision mediump float;
 
+        in vec4 vColor;
         out vec4 fragColor;
 
         void main() {
-            fragColor = vec4(0.0, 0.0, 0.0, 1.0);
+            fragColor = vColor;
         }`
     );
 
@@ -63,7 +70,8 @@ function initProgram() {
     
     // Get the position attribute index
     program.aPosition = gl.getAttribLocation(program, 'aPosition'); // get the vertex shader attribute "aPosition"
-    
+    program.aColor = gl.getAttribLocation(program, 'aColor'); // get the vertex shader attribute "aColor"
+
     return program;
 }
 
@@ -72,20 +80,28 @@ function initProgram() {
  * Initialize the data buffers.
  */
 function initBuffers() {
-    // The vertices of Sierpinski's Triangle
+    // The vertices and colors of Sierpinski's Triangle
     let coords = [];
-	sierpinski([-1, -1], [0, 1], [1, -1], NUM_STEPS, coords);
+    sierpinski([-1, -1], [0, 1], [1, -1], NUM_STEPS, coords);
+    let colors = [];
+    // TODO: loop with colors.push()
 
-    // TODO: Create and bind VAO
+    // Create and bind VAO
+    gl.sierpinskiVAO = gl.createVertexArray();
+    gl.bindVertexArray(gl.sierpinskiVAO);
 
     // TODO: Load the vertex coordinate data onto the GPU and associate with attribute
 
-    // TODO: Cleanup
+    // TODO: Load the vertex color data onto the GPU and associate with attribute
+    
+    // Cleanup
+    gl.bindVertexArray(null);
+    gl.bindBuffer(gl.ARRAY_BUFFER, null);
 }
 
 
 /**
- * Render the scene. Currently just a simple static triangle.
+ * Render the scene.
  */
 function render() {
     // Clear the current rendering
@@ -93,7 +109,9 @@ function render() {
     
     // TODO: Draw the Sierpinski's Triangle
 
-    // TODO: Cleanup
+    // Cleanup
+    gl.bindVertexArray(null);
+    gl.bindBuffer(gl.ARRAY_BUFFER, null);
 }
 
 
@@ -109,10 +127,7 @@ function sierpinski(a, b, c, steps, coords) {
         // Base case: add triangle vertices to array of coords
         coords.push(a[0], a[1], b[0], b[1], c[0], c[1]);
     } else {
-        // Recursive case: divide triangle and recurse
-		// TODO: Calculate midpoints of sides
-		
-        // TODO: Recurse to each of the new triangles
+        // TODO: recursive case
     }
 }
 
