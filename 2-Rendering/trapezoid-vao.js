@@ -1,4 +1,5 @@
-// Renders a trapezoid (solution with the code cleaned up a bit)
+// Renders a trapezoid using a VAO (solution with the code cleaned up a bit)
+// Code given does not use a VAO, you have to adapt it
 'use strict';
     
 // Global WebGL context variable
