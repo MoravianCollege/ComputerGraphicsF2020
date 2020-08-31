@@ -111,7 +111,6 @@ function render() {
 
     // Cleanup
     gl.bindVertexArray(null);
-    gl.bindBuffer(gl.ARRAY_BUFFER, null);
 }
 
 
