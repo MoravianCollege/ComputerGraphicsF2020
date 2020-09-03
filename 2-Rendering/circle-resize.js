@@ -84,7 +84,12 @@ function initBuffers() {
     gl.circleVAO = gl.createVertexArray();
     gl.bindVertexArray(gl.circleVAO);
 
-    // TODO: Load the vertex coordinate data onto the GPU and associate with attribute
+    // Load the vertex coordinate data onto the GPU and associate with attribute
+    let posBuffer = gl.createBuffer(); // create a new buffer
+    gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer); // bind to the new buffer
+    gl.bufferData(gl.ARRAY_BUFFER, Float32Array.from(coords), gl.STATIC_DRAW); // load the data into the buffer
+    gl.vertexAttribPointer(gl.program.aPosition, 2, gl.FLOAT, false, 0, 0); // associate the buffer with "aPosition" as length-2 vectors of floats
+    gl.enableVertexAttribArray(gl.program.aPosition); // enable this set of data
 
     // Cleanup
     gl.bindVertexArray(null);
@@ -114,7 +119,7 @@ function circle(cx, cy, r, n, coords) {
     // The angle between subsequent vertices
     let theta = 2*Math.PI/n;
 
-    // TODO: copy results from another circle example
+    // TODO: copy code from another circle example
 }
 
 

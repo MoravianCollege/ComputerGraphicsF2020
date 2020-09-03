@@ -90,7 +90,12 @@ function initBuffers() {
     gl.sierpinskiVAO = gl.createVertexArray();
     gl.bindVertexArray(gl.sierpinskiVAO);
 
-    // TODO: Load the vertex coordinate data onto the GPU and associate with attribute
+    // Load the vertex coordinate data onto the GPU and associate with attribute
+    let posBuffer = gl.createBuffer(); // create a new buffer
+    gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer); // bind to the new buffer
+    gl.bufferData(gl.ARRAY_BUFFER, Float32Array.from(coords), gl.STATIC_DRAW); // load the data into the buffer
+    gl.vertexAttribPointer(gl.program.aPosition, 2, gl.FLOAT, false, 0, 0); // associate the buffer with "aPosition" as length-2 vectors of floats
+    gl.enableVertexAttribArray(gl.program.aPosition); // enable this set of data
 
     // TODO: Load the vertex color data onto the GPU and associate with attribute
     
@@ -109,7 +114,7 @@ function render() {
     
     // Draw Sierpinski's Triangle
     gl.bindVertexArray(gl.sierpinskiVAO);
-    gl.drawArrays(gl.TRIANGLES, 0, Math.pow(3, NUM_STEPS)*3);
+    gl.drawArrays(gl.TRIANGLES, 0, TODO);
     gl.bindVertexArray(null);
 }
 

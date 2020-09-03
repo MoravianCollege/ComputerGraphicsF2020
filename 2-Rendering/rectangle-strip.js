@@ -73,13 +73,21 @@ function initProgram() {
 function initBuffers() {
     // TODO: The vertices of the rectangle
 
-    // TODO: Create and bind VAO
-    
-    // TODO: Load the vertex coordinate data onto the GPU and associate with attribute
+    // Create and bind VAO
+    gl.rectangleVAO = gl.createVertexArray();
+    gl.bindVertexArray(gl.rectangleVAO);
 
-    // TODO: Cleanup
+    // Load the vertex coordinate data onto the GPU and associate with attribute
+    let posBuffer = gl.createBuffer(); // create a new buffer
+    gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer); // bind to the new buffer
+    gl.bufferData(gl.ARRAY_BUFFER, Float32Array.from(coords), gl.STATIC_DRAW); // load the data into the buffer
+    gl.vertexAttribPointer(gl.program.aPosition, 2, gl.FLOAT, false, 0, 0); // associate the buffer with "aPosition" as length-2 vectors of floats
+    gl.enableVertexAttribArray(gl.program.aPosition); // enable this set of data
+
+    // Cleanup
+    gl.bindVertexArray(null);
+    gl.bindBuffer(gl.ARRAY_BUFFER, null);
 }
-
 
 /**
  * Render the scene.
