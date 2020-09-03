@@ -91,9 +91,7 @@ function render() {
     // Clear the current rendering
     gl.clear(gl.COLOR_BUFFER_BIT);
     
-    // TODO: Draw the Sierpinski's Triangle
-
-    // TODO: Cleanup
+    // TODO: Draw Sierpinski's Triangle
 }
 
 

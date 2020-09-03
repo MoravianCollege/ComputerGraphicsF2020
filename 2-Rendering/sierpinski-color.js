@@ -107,9 +107,9 @@ function render() {
     // Clear the current rendering
     gl.clear(gl.COLOR_BUFFER_BIT);
     
-    // TODO: Draw the Sierpinski's Triangle
-
-    // Cleanup
+    // Draw Sierpinski's Triangle
+    gl.bindVertexArray(gl.sierpinskiVAO);
+    gl.drawArrays(gl.TRIANGLES, 0, Math.pow(3, NUM_STEPS)*3);
     gl.bindVertexArray(null);
 }
 

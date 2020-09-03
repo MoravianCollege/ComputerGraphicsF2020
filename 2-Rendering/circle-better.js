@@ -94,8 +94,6 @@ function render() {
     gl.clear(gl.COLOR_BUFFER_BIT);
     
     // TODO: Draw the circle (can use the global constant NUM_SIDES)
-
-    // TODO: Cleanup
 }
 
 
