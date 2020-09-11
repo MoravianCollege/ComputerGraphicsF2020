@@ -142,11 +142,11 @@ function circle(cx, cy, r, n, coords) {
 function onClick(e) {
     // `this` refers to the element where you registered the event (in this case, the canvas)
     // `e.offsetX` and `e.offsetY` are the x and y position of the click within the canvas
-    // `this.offsetWidth` and `this.offsetHeight` are the width and height of `this`
-    let [x, y, w, h] = [e.offsetX, e.offsetY, this.offsetWidth, this.offsetHeight];
+    // `this.width` and `this.height` are the width and height of `this`
+    let [x, y, w, h] = [e.offsetX, e.offsetY, this.width, this.height];
 
     // Convert x and y from window coordinates (pixels) to clip coordinates (-1,-1 to 1,1)
-    [x, y] = [1-2*x/w, 1-2*y/h];
+    [x, y] = [1-2*x/(w-1), 1-2*y/(h-1)];
 
     // The new radius will be the distance of the clicked point (x,y) from the middle (0,0)
     let radius = Math.sqrt(x*x + y*y);
