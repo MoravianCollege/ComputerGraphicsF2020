@@ -18,7 +18,7 @@ window.addEventListener('load', function init() {
     // Configure WebGL
     gl.viewport(0, 0, canvas.width, canvas.height); // this is the region of the canvas we want to draw on (all of it)
     gl.clearColor(1.0, 1.0, 1.0, 1.0); // setup the background color with red, green, blue, and alpha amounts (this is white)
-    
+
     // Initialize the WebGL program and data
     gl.program = initProgram();
     initBuffers();
@@ -88,13 +88,13 @@ function initBuffers() {
         1, 0, 0, // red
         0, 1, 0, // green
         0, 0, 1, // blue
-        0, 0, 0  // black
+        0, 0, 0, // black
     ];
     let indices = [
-        3, 1, 0,
         2, 0, 1,
         0, 3, 2,
         1, 2, 3,
+        3, 1, 0,
     ];
 
     // Create and bind VAO
