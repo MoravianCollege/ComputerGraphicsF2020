@@ -185,7 +185,7 @@ function onClick(e) {
     let [x, y, w, h] = [e.offsetX, e.offsetY, this.offsetWidth, this.offsetHeight];
 
     // Convert x and y from window coordinates (pixels) to clip coordinates (-1,-1 to 1,1)
-    [x, y] = [1-2*x/w, 1-2*y/h];
+    [x, y] = [2*x/w-1, 1-2*y/h];
 
     // The new radius will be the distance of the clicked point (x,y) from the middle (0,0)
     setRadius(Math.sqrt(x*x + y*y));
@@ -195,7 +195,7 @@ function onClick(e) {
 /**
  * When radius slider is changed (or the diameter checkbox changes) update the displayed radius.
  */
-function onRadiusChange(e) {
+function onRadiusChange() {
     // NOTE: the first three lines here are to deal with optional diameter checkbox
     // Can't use "this" since in this particular example this same handler is used for both the
     // the slider and diameter inputs

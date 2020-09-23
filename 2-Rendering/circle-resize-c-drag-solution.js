@@ -195,7 +195,7 @@ function onMouseMove(e) {
     e.preventDefault()
 
     // Get mouse x and y in clip coordinates
-    let [x, y] = [1-2*e.offsetX/this.width, 1-2*e.offsetY/this.height];
+    let [x, y] = [2*e.offsetX/(this.width-1)-1, 1-2*e.offsetY/(this.height-1)];
 
     // The new radius will be the distance of the clicked point (x,y) from the middle (0,0)
     setRadius(Math.sqrt(x*x + y*y));
@@ -205,7 +205,7 @@ function onMouseMove(e) {
 /**
  * When mouse button is released remove the mousemove and mouseup events.
  */
-function onMouseUp(e) {
+function onMouseUp() {
     gl.canvas.removeEventListener('mousemove', onMouseMove);
     gl.canvas.removeEventListener('mouseup', onMouseUp);
 }
@@ -214,7 +214,7 @@ function onMouseUp(e) {
 /**
  * When radius slider is changed (or the diameter checkbox changes) update the displayed radius.
  */
-function onRadiusChange(e) {
+function onRadiusChange() {
     let radius = document.getElementById("slider").value;
     if (document.getElementById("diameter").checked) {
         radius /= 2;
