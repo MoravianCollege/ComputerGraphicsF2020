@@ -128,7 +128,7 @@ function initProgram() {
                 diffuse = 0.0;
             } else {
                 vec3 R = reflect(L, N);
-                specular = pow(dot(R, E), uMaterialShininess);
+                specular = pow(max(dot(R, E), 0.0), uMaterialShininess);
             }
             
             // Compute final color
