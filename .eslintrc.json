@@ -6,10 +6,7 @@
         // utilities exports
         "loadFile": "readonly", "compileShader": "readonly", "linkProgram": "readonly",
         // gl-matrix exports
-        "glMatrix": "readonly",
-        "vec2": "readonly", "vec3": "readonly", "vec4": "readonly",
-        "mat2": "readonly", "mat2d": "readonly", "mat3": "readonly", "mat4": "readonly",
-        "quat": "readonly", "quat2": "readonly"
+        "glMatrix": "readonly"
     },
     "rules": {
         "brace-style": ["error", "1tbs", { "allowSingleLine": true }],

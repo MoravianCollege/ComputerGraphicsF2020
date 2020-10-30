@@ -1,4 +1,4 @@
-// Model-View Matrix: Transformation Demo (solution)
+// Model-View Matrix: Orthographic Projection Demo
 'use strict';
 
 // Allow use of glMatrix values directly instead of needing the glMatrix prefix
@@ -50,6 +50,7 @@ window.addEventListener('load', function init() {
 
     // Set initial values of uniforms
     updateModelViewMatrix();
+    updateProjectionMatrix();
     updateLightPosition();
     gl.uniform3fv(gl.program.uLightAmbient, stringToColor(document.getElementById("light-ambient").value));
     gl.uniform3fv(gl.program.uLightDiffuse, stringToColor(document.getElementById("light-diffuse").value));
@@ -85,7 +86,7 @@ function initProgram() {
             vec4 P = uModelViewMatrix * aPosition;
             vNormalVector = mat3(uModelViewMatrix) * aNormal;
             vLightVector = uLight.w == 1.0 ? P.xyz - uLight.xyz : uLight.xyz;
-            vEyeVector = vec3(0, 0, 1) - P.xyz;
+            vEyeVector = -P.xyz;
             gl_Position = P;
         }`
     );
@@ -222,6 +223,12 @@ function initEvents() {
             document.getElementById(name + '-' + axis).addEventListener('input', updateModelViewMatrix);
         }
     }
+    document.getElementById('left').addEventListener('input', updateProjectionMatrix);
+    document.getElementById('right').addEventListener('input', updateProjectionMatrix);
+    document.getElementById('top').addEventListener('input', updateProjectionMatrix);
+    document.getElementById('bottom').addEventListener('input', updateProjectionMatrix);
+    document.getElementById('near').addEventListener('input', updateProjectionMatrix);
+    document.getElementById('far').addEventListener('input', updateProjectionMatrix);
 }
 
 
@@ -238,10 +245,10 @@ function updateLightPosition() {
 
 
 /**
- * Updates the model view matrix with a rotation, translation, scale, and origin.
+ * Updates the model-view matrix with a rotation, translation, scale, and origin.
  */
 function updateModelViewMatrix() {
-    // Update model view matrix uniform
+    // Update model-view matrix uniform
     let mv = mat4.fromRotationTranslationScaleOrigin(mat4.create(),
         quat.fromEuler(quat.create(), ...getXYZ('rotation')),
         getXYZ('translation'), getXYZ('scale'), getXYZ('origin')
@@ -253,6 +260,20 @@ function updateModelViewMatrix() {
         document.getElementById('mv'+(i+1)).innerText = mv[i].toFixed(2);
     }
 }
+
+
+/**
+ * Updates the projection matrix.
+ */
+function updateProjectionMatrix() {
+    // TODO
+
+    // This updates the HTML display of the projection matrix
+    for (let i = 0; i < p.length; i++) {
+        document.getElementById('proj'+(i+1)).innerText = p[i].toFixed(2);
+    }
+}
+
 
 
 /**
@@ -271,10 +292,11 @@ function getXYZ(name) {
  * Keep the canvas sized to the window.
  */
 function onWindowResize() {
-    let size = Math.min(window.innerWidth, window.innerHeight);
-    gl.canvas.width = gl.canvas.height = size;
-    gl.canvas.style.width = gl.canvas.style.height = size + 'px';
-    gl.viewport(0, 0, size, size);
+    let [w, h] = [window.innerWidth, window.innerHeight];
+    gl.canvas.width = w;
+    gl.canvas.height = h;
+    gl.viewport(0, 0, w, h);
+    //updateProjectionMatrix(); // TODO
 }
 
 
