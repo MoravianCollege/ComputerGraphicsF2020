@@ -1,4 +1,4 @@
-// Model-View Matrix: Orthographic Projection Demo (solution)
+// Model-View Matrix: Look-At Demo (solution)
 'use strict';
 
 // Allow use of glMatrix values directly instead of needing the glMatrix prefix
@@ -26,7 +26,7 @@ window.addEventListener('load', function init() {
     gl.viewport(0, 0, canvas.width, canvas.height); // this is the region of the canvas we want to draw on (all of it)
     gl.clearColor(1.0, 1.0, 1.0, 0.0); // setup the background color with red, green, blue, and alpha
     gl.enable(gl.DEPTH_TEST);
-    gl.enable(gl.CULL_FACE);
+    //gl.enable(gl.CULL_FACE);
 
     // Initialize the WebGL program and data
     gl.program = initProgram();
@@ -220,15 +220,12 @@ function initEvents() {
     document.getElementById('light-y').addEventListener('input', updateLightPosition);
     document.getElementById('light-z').addEventListener('input', updateLightPosition);
     document.getElementById('light-w').addEventListener('input', updateLightPosition);
-    for (let name of ['rotation', 'translation', 'scale', 'origin']) {
+    for (let name of ['eye', 'target', 'up']) {
         for (let axis of ['x', 'y', 'z']) {
             document.getElementById(name + '-' + axis).addEventListener('input', updateModelViewMatrix);
         }
     }
-    document.getElementById('left').addEventListener('input', updateProjectionMatrix);
-    document.getElementById('right').addEventListener('input', updateProjectionMatrix);
-    document.getElementById('top').addEventListener('input', updateProjectionMatrix);
-    document.getElementById('bottom').addEventListener('input', updateProjectionMatrix);
+    document.getElementById('fovy').addEventListener('input', updateProjectionMatrix);
     document.getElementById('near').addEventListener('input', updateProjectionMatrix);
     document.getElementById('far').addEventListener('input', updateProjectionMatrix);
 }
@@ -250,11 +247,10 @@ function updateLightPosition() {
  * Updates the model-view matrix with a rotation, translation, scale, and origin.
  */
 function updateModelViewMatrix() {
-    // Update model-view matrix uniform
-    let mv = mat4.fromRotationTranslationScaleOrigin(mat4.create(),
-        quat.fromEuler(quat.create(), ...getXYZ('rotation')),
-        getXYZ('translation'), getXYZ('scale'), getXYZ('origin')
-    );
+    let eye = getXYZ('eye'), target = getXYZ('target'), up = getXYZ('up');
+
+    // TODO: Update model-view matrix uniform
+    let mv = mat4.lookAt(mat4.create(), eye, target, up);
     gl.uniformMatrix4fv(gl.program.uModelViewMatrix, false, mv);
 
     // This updates the HTML display of the model-view matrix
@@ -268,15 +264,13 @@ function updateModelViewMatrix() {
  * Updates the projection matrix.
  */
 function updateProjectionMatrix() {
-    let left = +document.getElementById('left').value;
-    let right = +document.getElementById('right').value;
-    let bottom = +document.getElementById('bottom').value;
-    let top = +document.getElementById('top').value;
+    // Create the perspective projection matrix
+    let [w, h] = [gl.canvas.width, gl.canvas.height];
+    let fovy = +document.getElementById('fovy').value;
     let near = +document.getElementById('near').value;
     let far = +document.getElementById('far').value;
-
-    // Update projection matrix uniform
-    let p = mat4.ortho(mat4.create(), left, right, bottom, top, near, far);
+    let p = mat4.create();
+    mat4.perspective(p, fovy, w/h, near, far);
     gl.uniformMatrix4fv(gl.program.uProjectionMatrix, false, p);
 
     // This updates the HTML display of the projection matrix
@@ -307,7 +301,7 @@ function onWindowResize() {
     gl.canvas.width = w;
     gl.canvas.height = h;
     gl.viewport(0, 0, w, h);
-    //updateProjectionMatrix(); // TODO
+    updateProjectionMatrix();
 }
 
 
@@ -382,6 +376,7 @@ function calc_normals(coords, indices, is_tri_strip) {
     for (let i = 0; i < normals.length; i+=3) {
         let N = normals.subarray(i, i+3);
         vec3.normalize(N, N);
+        vec3.negate(N, N); // NOTE: when using perspective need to invert the normals
     }
 
     // Return the computed normals

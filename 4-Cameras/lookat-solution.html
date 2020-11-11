@@ -5,14 +5,14 @@
         <meta charset="utf-8">
 
         <!-- Give the page a title - make sure it is descriptive! -->
-        <title>4-Cameras: Orthographic Projection Demo (solution)</title>
+        <title>4-Cameras: Look-At Demo (solution)</title>
 
         <!-- Load utilities and functions -->
         <script src="../common/utilities.js"></script>
         <script src="../common/gl-matrix.js"></script>
 
         <!-- Load the code for this example -->
-        <script src="orthographic-solution.js"></script>
+        <script src="lookat-solution.js"></script>
 
         <!-- Style the canvas -->
         <style type="text/css">
@@ -67,18 +67,15 @@
                 <input type="number" id="light-y" min="-50" max="50" step="0.1" size="3" value="0">
                 <input type="number" id="light-z" min="-50" max="50" step="0.1" size="3" value="25">
                 <input type="checkbox" id="light-w" checked><br>
-            Rotation: <input type="number" id="rotation-x" min="-360" max="360" step="22.5" size="4" value="0">°
-                <input type="number" id="rotation-y" min="-360" max="360" step="22.5" size="4" value="0">°
-                <input type="number" id="rotation-z" min="-360" max="360" step="22.5" size="4" value="0">°<br>
-            Translation: <input type="number" id="translation-x" min="-3" max="3" step="0.1" size="3" value="0">
-                <input type="number" id="translation-y" min="-3" max="3" step="0.1" size="3" value="0">
-                <input type="number" id="translation-z" min="-3" max="3" step="0.1" size="3" value="0"><br>
-            Scaling: <input type="number" id="scale-x" min="-3" max="3" step="0.1" size="3" value="1">
-                <input type="number" id="scale-y" min="-3" max="3" step="0.1" size="3" value="1">
-                <input type="number" id="scale-z" min="-3" max="3" step="0.1" size="3" value="1"><br>
-            Origin: <input type="number" id="origin-x" min="-3" max="3" step="0.1" size="3" value="0">
-                <input type="number" id="origin-y" min="-3" max="3" step="0.1" size="3" value="0">
-                <input type="number" id="origin-z" min="-3" max="3" step="0.1" size="3" value="0"><br>
+            Eye: <input type="number" id="eye-x" min="-50" max="50" step="0.1" size="3" value="0">
+                <input type="number" id="eye-y" min="-50" max="50" step="0.1" size="3" value="0">
+                <input type="number" id="eye-z" min="-50" max="50" step="0.1" size="3" value="2"><br>
+            Target: <input type="number" id="target-x" min="-50" max="50" step="0.1" size="3" value="0">
+                <input type="number" id="target-y" min="-50" max="50" step="0.1" size="3" value="0">
+                <input type="number" id="target-z" min="-50" max="50" step="0.1" size="3" value="0"><br>
+            Up: <input type="number" id="up-x" min="-3" max="3" step="0.1" size="3" value="0">
+                <input type="number" id="up-y" min="-3" max="3" step="0.1" size="3" value="1">
+                <input type="number" id="up-z" min="-3" max="3" step="0.1" size="3" value="0"><br>
         </div>
         <div id=mv-output>
             <b>Model-View Matrix:</b>
@@ -90,12 +87,9 @@
             </table>
         </div>
         <div id=proj-controls>
-            Left: <input type="number" id="left" min="-1000" max="1000" step="0.1" size="4" value="-2"><br>
-            Right: <input type="number" id="right" min="-1000" max="1000" step="0.1" size="4" value="2"><br>
-            Bottom: <input type="number" id="bottom" min="-1000" max="1000" step="0.1" size="4" value="-2"><br>
-            Top: <input type="number" id="top" min="-1000" max="1000" step="0.1" size="4" value="2"><br>
-            Near: <input type="number" id="near" min="-1000" max="1000" step="0.1" size="4" value="2"><br>
-            Far: <input type="number" id="far" min="-1000" max="1000" step="0.1" size="4" value="-2"><br>
+            FOV (y): <input type="number" id="fovy" min="0" max="180" step="0.1" size="4" value="45">°<br>
+            Near: <input type="number" id="near" min="0" max="1000" step="0.1" size="4" value="0.001"><br>
+            Far: <input type="number" id="far" min="0" max="1000" step="0.1" size="4" value="10"><br>
         </div>
         <div id=proj-output>
             <b>Projection Matrix:</b>

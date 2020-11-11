@@ -1,4 +1,4 @@
-// Model-View Matrix: Orthographic Projection Demo (solution)
+// Model-View Matrix: Perspective Projection Demo (solution)
 'use strict';
 
 // Allow use of glMatrix values directly instead of needing the glMatrix prefix
@@ -27,6 +27,7 @@ window.addEventListener('load', function init() {
     gl.clearColor(1.0, 1.0, 1.0, 0.0); // setup the background color with red, green, blue, and alpha
     gl.enable(gl.DEPTH_TEST);
     gl.enable(gl.CULL_FACE);
+    gl.cullFace(gl.FRONT);
 
     // Initialize the WebGL program and data
     gl.program = initProgram();
@@ -160,6 +161,7 @@ function initProgram() {
     return program;
 }
 
+
 /**
  * Load a model from a file into a VAO and return the VAO.
  */
@@ -225,10 +227,7 @@ function initEvents() {
             document.getElementById(name + '-' + axis).addEventListener('input', updateModelViewMatrix);
         }
     }
-    document.getElementById('left').addEventListener('input', updateProjectionMatrix);
-    document.getElementById('right').addEventListener('input', updateProjectionMatrix);
-    document.getElementById('top').addEventListener('input', updateProjectionMatrix);
-    document.getElementById('bottom').addEventListener('input', updateProjectionMatrix);
+    document.getElementById('fovy').addEventListener('input', updateProjectionMatrix);
     document.getElementById('near').addEventListener('input', updateProjectionMatrix);
     document.getElementById('far').addEventListener('input', updateProjectionMatrix);
 }
@@ -265,18 +264,25 @@ function updateModelViewMatrix() {
 
 
 /**
+ * Converts degrees to radians.
+ */
+function deg2rad(degrees) {
+    return degrees * Math.PI / 180;
+}
+
+
+/**
  * Updates the projection matrix.
  */
 function updateProjectionMatrix() {
-    let left = +document.getElementById('left').value;
-    let right = +document.getElementById('right').value;
-    let bottom = +document.getElementById('bottom').value;
-    let top = +document.getElementById('top').value;
+    let fovy = deg2rad(+document.getElementById('fovy').value);
+    let aspect = gl.canvas.width / gl.canvas.height;
     let near = +document.getElementById('near').value;
     let far = +document.getElementById('far').value;
 
     // Update projection matrix uniform
-    let p = mat4.ortho(mat4.create(), left, right, bottom, top, near, far);
+    let p  = mat4.perspective(mat4.create(), fovy, aspect, near, far);
+    //mat4.scale(p, p, [1, 1, -1]);
     gl.uniformMatrix4fv(gl.program.uProjectionMatrix, false, p);
 
     // This updates the HTML display of the projection matrix
@@ -307,7 +313,7 @@ function onWindowResize() {
     gl.canvas.width = w;
     gl.canvas.height = h;
     gl.viewport(0, 0, w, h);
-    //updateProjectionMatrix(); // TODO
+    updateProjectionMatrix();
 }
 
 
@@ -382,6 +388,7 @@ function calc_normals(coords, indices, is_tri_strip) {
     for (let i = 0; i < normals.length; i+=3) {
         let N = normals.subarray(i, i+3);
         vec3.normalize(N, N);
+        vec3.negate(N, N);
     }
 
     // Return the computed normals

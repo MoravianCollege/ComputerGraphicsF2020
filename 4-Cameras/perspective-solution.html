@@ -5,14 +5,14 @@
         <meta charset="utf-8">
 
         <!-- Give the page a title - make sure it is descriptive! -->
-        <title>4-Cameras: Orthographic Projection Demo (solution)</title>
+        <title>4-Cameras: Perspective Projection Demo (solution)</title>
 
         <!-- Load utilities and functions -->
         <script src="../common/utilities.js"></script>
         <script src="../common/gl-matrix.js"></script>
 
         <!-- Load the code for this example -->
-        <script src="orthographic-solution.js"></script>
+        <script src="perspective-solution.js"></script>
 
         <!-- Style the canvas -->
         <style type="text/css">
@@ -90,12 +90,9 @@
             </table>
         </div>
         <div id=proj-controls>
-            Left: <input type="number" id="left" min="-1000" max="1000" step="0.1" size="4" value="-2"><br>
-            Right: <input type="number" id="right" min="-1000" max="1000" step="0.1" size="4" value="2"><br>
-            Bottom: <input type="number" id="bottom" min="-1000" max="1000" step="0.1" size="4" value="-2"><br>
-            Top: <input type="number" id="top" min="-1000" max="1000" step="0.1" size="4" value="2"><br>
-            Near: <input type="number" id="near" min="-1000" max="1000" step="0.1" size="4" value="2"><br>
-            Far: <input type="number" id="far" min="-1000" max="1000" step="0.1" size="4" value="-2"><br>
+            FOV (y): <input type="number" id="fovy" min="0" max="180" step="0.1" size="4" value="45">°<br>
+            Near: <input type="number" id="near" min="0" max="10" step="0.0001" size="4" value="0.0001"><br>
+            Far: <input type="number" id="far" min="0" max="1000" step="0.1" size="4" value="10"><br>
         </div>
         <div id=proj-output>
             <b>Projection Matrix:</b>

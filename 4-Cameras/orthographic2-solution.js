@@ -26,7 +26,7 @@ window.addEventListener('load', function init() {
     gl.viewport(0, 0, canvas.width, canvas.height); // this is the region of the canvas we want to draw on (all of it)
     gl.clearColor(1.0, 1.0, 1.0, 0.0); // setup the background color with red, green, blue, and alpha
     gl.enable(gl.DEPTH_TEST);
-    //gl.enable(gl.CULL_FACE);
+    gl.enable(gl.CULL_FACE);
 
     // Initialize the WebGL program and data
     gl.program = initProgram();
@@ -267,23 +267,18 @@ function updateModelViewMatrix() {
  * Updates the projection matrix.
  */
 function updateProjectionMatrix() {
-    // TODO
     let left = +document.getElementById('left').value;
     let right = +document.getElementById('right').value;
     let bottom = +document.getElementById('bottom').value;
     //let top = +document.getElementById('top').value;
-    let near = +document.getElementById('near').value;
-    let far = +document.getElementById('far').value;
-
     let aspect = gl.canvas.width / gl.canvas.height;
     let top = (right - left) / aspect + bottom;
+    let near = +document.getElementById('near').value;
+    let far = +document.getElementById('far').value;
     
-    let p = mat4.create();
-    mat4.ortho(
-        p, left, right, bottom, top, near, far
-    );
+    // Update projection matrix uniform
+    let p = mat4.ortho(mat4.create(), left, right, bottom, top, near, far);
     gl.uniformMatrix4fv(gl.program.uProjectionMatrix, false, p);
-
 
     // This updates the HTML display of the projection matrix
     for (let i = 0; i < p.length; i++) {
