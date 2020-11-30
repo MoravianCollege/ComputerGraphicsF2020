@@ -35,12 +35,11 @@ window.addEventListener('load', function init() {
     gl.clearColor(1.0, 1.0, 1.0, 0.0); // setup the background color with red, green, blue, and alpha
     gl.enable(gl.DEPTH_TEST);
     gl.enable(gl.CULL_FACE);
-    gl.cullFace(gl.FRONT); // NOTE: when using perspective the triangles are all backwards
 
     // Initialize the WebGL program and data
     gl.program = initProgram();
-    initEvents();
     initBuffers();
+    initEvents();
 
     // Set initial values of uniforms
     updateModelViewMatrix();
@@ -77,7 +76,7 @@ function initProgram() {
             vNormalVector = mat3(uModelViewMatrix) * aNormal;
             vec4 L = uModelViewMatrix * light;
             vLightVector = light.w == 1.0 ? P.xyz - L.xyz : L.xyz;
-            vEyeVector = P.xyz;
+            vEyeVector = -P.xyz;
             gl_Position = uProjectionMatrix * P;
         }`
     );
@@ -90,7 +89,7 @@ function initProgram() {
         const vec3 lightColor = vec3(1, 1, 1);
         const vec3 materialAmbient = vec3(0, 0.2, 0);
         const vec3 materialDiffuse = vec3(0, 0.5, 0);
-        const float materialShininess = 1000.0;
+        const float materialShininess = 100.0;
 
         // Vectors (varying variables from vertex shader)
         in vec3 vNormalVector;
@@ -132,7 +131,6 @@ function initProgram() {
     // Get the uniform indices
     program.uModelViewMatrix = gl.getUniformLocation(program, 'uModelViewMatrix');
     program.uProjectionMatrix = gl.getUniformLocation(program, 'uProjectionMatrix');
-    program.uLight = gl.getUniformLocation(program, 'uLight');
 
     return program;
 }
@@ -191,7 +189,6 @@ function initEvents() {
     window.addEventListener('resize', onWindowResize);
     gl.canvas.addEventListener('wheel', onMouseWheel);
     gl.canvas.addEventListener('mousedown', onMouseDown);
-    gl.canvas.addEventListener('contextmenu', e => { e.preventDefault(); return false; });
 }
 
 
@@ -213,40 +210,25 @@ function onMouseDown(e) {
 
     // Get the initial positions when the mouse goes down
     let [startX, startY] = [e.offsetX, e.offsetY];
-    let start_position = position.slice();
     let start_rotation = rotation.slice();
-
     function get_delta(e2) {
         // Get the amount moved
         let x = (e2.offsetX - startX)/(gl.canvas.width - 1);
         let y = (e2.offsetY - startY)/(gl.canvas.height - 1);
         return [x, y];
     }
-
-    function onMouseMove_Position(e2) {
-        let [x, y] = get_delta(e2);
-        position[0] = start_position[0] + x * 2;
-        position[1] = start_position[1] + y * -2;
-        updateModelViewMatrix();
-    }
-    function onMouseMove_Rotation(e2) {
+    function onMouseMove(e2) {
         let [x, y] = get_delta(e2);
         rotation[0] = start_rotation[0] + y * 360;
         rotation[1] = start_rotation[1] + x * 360;
         updateModelViewMatrix();
     }
     function onMouseUp() {
-        this.removeEventListener('mousemove', onMouseMove_Position);
-        this.removeEventListener('mousemove', onMouseMove_Rotation);
+        this.removeEventListener('mousemove', onMouseMove);
         this.removeEventListener('mouseup', onMouseUp);
     }
-
-    // Left-mouse down means translation and right-mouse down means rotation
     if (e.button === 0) {
-        this.addEventListener('mousemove', onMouseMove_Position);
-        this.addEventListener('mouseup', onMouseUp);
-    } else if (e.button === 2) {
-        this.addEventListener('mousemove', onMouseMove_Rotation);
+        this.addEventListener('mousemove', onMouseMove);
         this.addEventListener('mouseup', onMouseUp);
     }
 }
@@ -340,8 +322,8 @@ function unit_sphere(num_subdivisions) {
     function divide_triangle(a, b, c, n) {
         if (n === 0) {
             // Base case: add the triangle
-            add_coord(a);
             add_coord(b);
+            add_coord(a);
             add_coord(c);
         } else {
             // Get the midpoints
